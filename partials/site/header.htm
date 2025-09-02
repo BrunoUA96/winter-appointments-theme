@@ -1,7 +1,7 @@
 {# == function onStart() { $this['backendUrl'] = Backend::url('/'); } == #}
 <nav class="navbar fixed-top navbar-expand-lg p-4">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#"> Dr. Lazanovska </a>
+        <a class="navbar-brand" href="{{ 'home' | page }}"> Dr. Lazanovska </a>
         <button
             class="navbar-toggler"
             type="button"
@@ -16,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-4">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">
+                    <a class="nav-link active" aria-current="page" href="{{ 'about' | page }}">
                         Sobre mim
                     </a>
                 </li>
