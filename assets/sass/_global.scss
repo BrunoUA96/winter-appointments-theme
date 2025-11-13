@@ -1,0 +1,32 @@
+@use "colors";
+
+*,
+html,
+body,
+a,
+p {
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: colors.$black;
+}
+
+/* Global styles */
+body {
+    background-color: colors.$background;
+}
+
+.pink-batton {
+    background-color: colors.$pink;
+    -webkit-box-shadow: 0px 0px 20px 1px colors.$pink;
+    -moz-box-shadow: 0px 0px 20px 1px colors.$pink;
+    box-shadow: 0px 0px 20px 1px colors.$pink;
+}
+
+.button {
+    background-color: colors.$black;
+    color: colors.$background;
+    text-decoration: none;
+    border-radius: 3rem;
+    padding: 0.5rem 1rem;
+}

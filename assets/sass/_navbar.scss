@@ -1,0 +1,19 @@
+@use "colors";
+
+.navbar {
+    background-color: colors.$background;
+    z-index: 9;
+
+    .navbar-brand {
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+    }
+
+    .nav-item {
+        a {
+            font-weight: 400;
+            transition: font-weight 1s;
+        }
+    }
+}

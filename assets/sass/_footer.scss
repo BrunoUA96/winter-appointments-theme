@@ -1,0 +1,65 @@
+@use "colors";
+
+.footer {
+    background-color: colors.$pink;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 0 1rem 0;
+    margin-top: auto;
+
+    &-list {
+        display: flex;
+        list-style: none;
+        margin: 0 auto;
+        gap: 4rem;
+        margin-bottom: 2rem;
+
+        &-item {
+            &-link {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-decoration: none;
+                padding: 1rem;
+            }
+
+            &-icon {
+                width: 1.6rem;
+                filter: invert(11%) sepia(1%) saturate(5191%) hue-rotate(321deg)
+                    brightness(100%) contrast(81%);
+            }
+
+            &-label {
+                color: colors.$black;
+                font-weight: 300;
+                font-size: 13px;
+                margin-top: 0.5rem;
+                letter-spacing: 1px;
+            }
+        }
+    }
+
+    &-autor {
+        background-color: colors.$green;
+        padding: 0.5rem 0.8rem;
+        // border-radius: 1rem;
+        color: colors.$black;
+        font-size: 14px;
+        margin-top: 0.5rem;
+        -webkit-box-shadow: 0px 0px 20px 1px colors.$green;
+        -moz-box-shadow: 0px 0px 20px 1px colors.$green;
+        box-shadow: 0px 0px 20px 1px colors.$green;
+
+        span {
+            display: inline-block;
+            font-family: "Encode Sans SC", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
+        }
+    }
+}
