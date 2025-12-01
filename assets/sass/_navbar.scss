@@ -1,19 +1,167 @@
 @use "colors";
+@use "sass:color";
 
 .navbar {
-    background-color: colors.$background;
+    background: rgba(255, 247, 243, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     z-index: 9;
+    padding: 1.2rem 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    // Sticky header эффект при скролле
+    &.scrolled {
+        padding: 0.8rem 0 !important;
+        background: rgba(255, 247, 243, 0.98);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(20px);
+        
+        .navbar-brand {
+            .header-logo {
+                width: 50px;
+                height: 37px;
+            }
+            
+            .brand-text {
+                font-size: 1.2rem;
+            }
+        }
+    }
 
     .navbar-brand {
         font-optical-sizing: auto;
-        font-weight: 600;
+        font-weight: 700;
         font-style: normal;
+        font-size: 1.4rem;
+        color: colors.$black;
+        letter-spacing: -0.3px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        
+        .header-logo {
+            width: 60px;
+            height: 45px;
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            
+            // Увеличиваем элементы <g> внутри логотипа
+            .logo-path {
+                transform: scale(2.4);
+                transform-origin: center center;
+            }
+        }
+        
+        .brand-text {
+            transition: font-size 0.3s ease;
+        }
+        
+        &:hover {
+            transform: translateY(-2px);
+            color: colors.$pink;
+            
+            .header-logo {
+                transform: scale(1.05);
+            }
+        }
     }
 
     .nav-item {
         a {
-            font-weight: 400;
-            transition: font-weight 1s;
+            font-weight: 500;
+            font-size: 1rem;
+            color: colors.$darkGray;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 2px;
+                background: linear-gradient(90deg, colors.$pink 0%, colors.$pink 100%);
+                transition: width 0.3s ease;
+                border-radius: 2px;
+            }
+            
+            &:hover {
+                color: colors.$pink;
+                transform: translateY(-2px);
+                
+                &::before {
+                    width: 80%;
+                }
+            }
+            
+            &.active {
+                color: colors.$pink;
+                font-weight: 600;
+                
+                &::before {
+                    width: 80%;
+                }
+            }
+        }
+        
+        .pink-batton {
+            background: linear-gradient(135deg, colors.$pink 0%, color.adjust(colors.$pink, $lightness: 3%) 100%);
+            color: colors.$black;
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(255, 211, 243, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            &::before {
+                display: none;
+            }
+            
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(255, 211, 243, 0.6);
+                background: linear-gradient(135deg, color.adjust(colors.$pink, $lightness: 2%) 0%, color.adjust(colors.$pink, $lightness: 5%) 100%);
+            }
+        }
+    }
+    
+    .navbar-toggler {
+        border: 2px solid colors.$borderGray;
+        border-radius: 10px;
+        padding: 0.4rem 0.6rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            border-color: colors.$pink;
+            box-shadow: 0 4px 12px rgba(255, 211, 243, 0.3);
+        }
+    }
+    
+    // Responsive
+    @media (max-width: 768px) {
+        padding: 1rem 0;
+        
+        .navbar-brand {
+            font-size: 1.2rem;
+        }
+        
+        .nav-item {
+            a {
+                padding: 0.5rem 1rem;
+                font-size: 0.95rem;
+            }
+            
+            .pink-batton {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
         }
     }
 }

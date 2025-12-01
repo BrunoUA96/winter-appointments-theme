@@ -4,6 +4,8 @@
 // Components
 @use 'navbar';
 @use 'footer';
+@use 'preloader';
+@use 'pjax';
 
 // Home
 @use 'home/_welcome';

@@ -1,0 +1,142 @@
+@use "colors";
+
+/**
+ * PJAX Transitions Styles
+ * Стили для плавных переходов между страницами
+ */
+
+#layout-content {
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    min-height: 100vh;
+    
+    // Показываем контент после скрытия прелоадера
+    body.preloader-hidden & {
+        opacity: 1;
+    }
+}
+
+// Дополнительные классы для анимаций (если нужно использовать через классы)
+.page-transition {
+    &-fade {
+        animation: fadeIn 0.4s ease-out;
+    }
+    
+    &-slide-left {
+        animation: slideInLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    &-slide-right {
+        animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    &-slide-up {
+        animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    &-scale {
+        animation: scaleIn 0.4s ease-out;
+    }
+}
+
+// Keyframes для анимаций
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Индикатор загрузки для PJAX (легкий, не полный прелоадер)
+.pjax-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 211, 243, 0.2);
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    
+    &.active {
+        opacity: 1;
+    }
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, colors.$pink 0%, colors.$pink 100%);
+        animation: pjaxProgress 0.5s ease-out forwards;
+    }
+}
+
+@keyframes pjaxProgress {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    #layout-content {
+        transition-duration: 0.3s;
+    }
+}
+
