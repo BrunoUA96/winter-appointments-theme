@@ -1,16 +1,35 @@
+{% if banner %}
 <div class="container-fluid px-o welcome">
     <div class="row h-100">
         <div
             class="col-6 d-flex flex-column justify-content-center align-items-baseline welcome-content"
         >
-            <h1>Dr. Lazanovska</h1>
-            <h6>
-                Um médico de família que se esforça para fornecer cuidados
-                abrangentes e atenciosos abordagem para sua saúde.
-            </h6>
+            {% if banner.title %}
+                <h1>{{ banner.title }}</h1>
+            {% else %}
+                <h1>Dr. Lazanovska</h1>
+            {% endif %}
+            {% if banner.subtitle %}
+                <h6>
+                    {{ banner.subtitle }}
+                </h6>
+            {% else %}
+                <h6>
+                    Um médico de família que se esforça para fornecer cuidados
+                    abrangentes e atenciosos abordagem para sua saúde.
+                </h6>
+            {% endif %}
         </div>
+        {% if banner.image %}
+        <div class="col-6 pe-0 welcome-image-box h-100">
+            <img src="{{ banner.image|media }}" alt="{{ banner.title|default('Dr. Lazanovska') }}" />
+        </div>
+        {% else %}
         <div class="col-6 pe-0 welcome-image-box h-100">
             <img src="{{ 'assets/images/home/banner.jpg'|theme }}" alt="" />
         </div>
+        {% endif %}
     </div>
 </div>
+{% endif %}
+

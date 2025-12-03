@@ -1,94 +1,40 @@
+{% if consultationSection %}
 <div class="container consultation my-5">
     <div class="row">
         <div class="col-12 text-center mb-5">
-            <h5>Efetuo seguinte consultas</h5>
-            <span>As consultas server para muito mais do que tu pensas</span>
+            {% if consultationSection.title %}
+                <h5>{{ consultationSection.title }}</h5>
+            {% else %}
+                <h5>Efetuo seguinte consultas</h5>
+            {% endif %}
+            {% if consultationSection.subtitle %}
+                <span>{{ consultationSection.subtitle }}</span>
+            {% else %}
+                <span>As consultas server para muito mais do que tu pensas</span>
+            {% endif %}
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
-            <div class="consultation-card">
-                <div class="consultation-card-image-box">
-                    <img
-                        class="mw-100"
-                        src="{{ 'assets/images/home/banner.jpg'|theme }}"
-                        alt=""
-                    />
+        {% if consultationTypes and consultationTypes.count > 0 %}
+            {% for consultationType in consultationTypes %}
+                <div class="col-3">
+                    <div class="consultation-card">
+                        <div class="consultation-card-text-box">
+                            {% if consultationType.name %}
+                                <h6>{{ consultationType.name }}</h6>
+                            {% endif %}
+                            {% if consultationType.features_array and consultationType.features_array|length > 0 %}
+                                <span>
+                                    {% for feature in consultationType.features_array %}
+                                        {{ feature }}{% if not loop.last %}<br>{% endif %}
+                                    {% endfor %}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="consultation-card-text-box">
-                    <h6>Consilta saude adulto</h6>
-                    <span>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Ex iste, officia voluptate quam, velit cupiditate
-                        porro architecto tempora, modi repellendus optio
-                        accusantium. Eligendi maxime voluptatibus praesentium
-                        sed enim non reiciendis.
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="consultation-card">
-                <div class="consultation-card-image-box">
-                    <img
-                        class="mw-100"
-                        src="{{ 'assets/images/home/banner.jpg'|theme }}"
-                        alt=""
-                    />
-                </div>
-                <div class="consultation-card-text-box">
-                    <h6>Consilta saude adulto</h6>
-                    <span>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Ex iste, officia voluptate quam, velit cupiditate
-                        porro architecto tempora, modi repellendus optio
-                        accusantium. Eligendi maxime voluptatibus praesentium
-                        sed enim non reiciendis.
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="consultation-card">
-                <div class="consultation-card-image-box">
-                    <img
-                        class="mw-100"
-                        src="{{ 'assets/images/home/banner.jpg'|theme }}"
-                        alt=""
-                    />
-                </div>
-                <div class="consultation-card-text-box">
-                    <h6>Consilta saude adulto</h6>
-                    <span>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Ex iste, officia voluptate quam, velit cupiditate
-                        porro architecto tempora, modi repellendus optio
-                        accusantium. Eligendi maxime voluptatibus praesentium
-                        sed enim non reiciendis.
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="consultation-card">
-                <div class="consultation-card-image-box">
-                    <img
-                        class="mw-100"
-                        src="{{ 'assets/images/home/banner.jpg'|theme }}"
-                        alt=""
-                    />
-                </div>
-                <div class="consultation-card-text-box">
-                    <h6>Consilta saude adulto</h6>
-                    <span>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Ex iste, officia voluptate quam, velit cupiditate
-                        porro architecto tempora, modi repellendus optio
-                        accusantium. Eligendi maxime voluptatibus praesentium
-                        sed enim non reiciendis.
-                    </span>
-                </div>
-            </div>
-        </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
+{% endif %}

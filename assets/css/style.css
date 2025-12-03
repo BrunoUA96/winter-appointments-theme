@@ -958,30 +958,8 @@ body.preloader-hidden .banner .button {
 .consultation-card:hover::before {
   opacity: 1;
 }
-.consultation-card:hover .consultation-card-image-box img {
-  transform: scale(1.1);
-}
 .consultation-card:hover .consultation-card-text-box {
   background: linear-gradient(135deg, #332e2e 0%, rgb(64.4072164948, 58.0927835052, 58.0927835052) 100%);
-}
-.consultation-card-image-box {
-  overflow: hidden;
-  position: relative;
-  height: 250px;
-}
-.consultation-card-image-box::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
-  pointer-events: none;
-}
-.consultation-card-image-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: brightness(0.95) contrast(1.05);
 }
 .consultation-card-text-box {
   background: linear-gradient(135deg, #332e2e 0%, rgb(42.9556701031, 38.7443298969, 38.7443298969) 100%);
@@ -1032,9 +1010,6 @@ body.preloader-hidden .banner .button {
   .consultation-card {
     margin-bottom: 1.5rem;
     border-radius: 20px;
-  }
-  .consultation-card-image-box {
-    height: 200px;
   }
   .consultation-card-text-box {
     padding: 1.5rem 1.5rem;
