@@ -1231,24 +1231,6 @@ body.preloader-hidden .banner .button {
   border-color: #28a745;
   box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
 }
-.form-error-icon, .form-success-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.2rem;
-  pointer-events: none;
-  z-index: 2;
-  transition: all 0.3s ease;
-}
-.form-error-icon {
-  color: #dc3545;
-  animation: shake 0.4s ease;
-}
-.form-success-icon {
-  color: #28a745;
-  animation: fadeInScale 0.3s ease;
-}
 .form-error-message {
   margin-top: 8px;
   font-size: 0.85rem;
@@ -1258,10 +1240,6 @@ body.preloader-hidden .banner .button {
   align-items: center;
   gap: 6px;
   animation: slideDown 0.3s ease;
-}
-.form-error-message::before {
-  content: "⚠️";
-  font-size: 1rem;
 }
 .form .char-counter {
   margin-top: 6px;

@@ -253,22 +253,13 @@
         
         // Создаем элемент сообщения об ошибке
         const errorElement = document.createElement('div');
-        errorElement.className = 'field-error-message';
+        errorElement.className = 'form-error-message';
         errorElement.textContent = message;
         errorElement.setAttribute('role', 'alert');
         errorElement.setAttribute('aria-live', 'polite');
         
         // Добавляем после поля
         fieldWrapper.appendChild(errorElement);
-        
-        // Добавляем иконку ошибки
-        if (!fieldWrapper.querySelector('.field-error-icon')) {
-            const errorIcon = document.createElement('span');
-            errorIcon.className = 'field-error-icon';
-            errorIcon.innerHTML = '⚠️';
-            errorIcon.setAttribute('aria-hidden', 'true');
-            fieldWrapper.appendChild(errorIcon);
-        }
     }
     
     // Отметить поле как валидное
@@ -282,17 +273,11 @@
         field.classList.remove('field-error');
         field.classList.add('field-valid');
         field.setAttribute('aria-invalid', 'false');
-        
-        // Удаляем иконку ошибки
-        const errorIcon = fieldWrapper.querySelector('.field-error-icon');
-        if (errorIcon) {
-            errorIcon.remove();
-        }
     }
     
     // Удалить сообщение об ошибке
     function removeFieldError(fieldWrapper) {
-        const errorMessage = fieldWrapper.querySelector('.field-error-message');
+        const errorMessage = fieldWrapper.querySelector('.form-error-message');
         if (errorMessage) {
             errorMessage.remove();
         }

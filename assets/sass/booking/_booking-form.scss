@@ -227,29 +227,6 @@
         }
     }
     
-    // Иконки валидации
-    &-error-icon,
-    &-success-icon {
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1.2rem;
-        pointer-events: none;
-        z-index: 2;
-        transition: all 0.3s ease;
-    }
-    
-    &-error-icon {
-        color: colors.$errorRed;
-        animation: shake 0.4s ease;
-    }
-    
-    &-success-icon {
-        color: colors.$successGreen;
-        animation: fadeInScale 0.3s ease;
-    }
-    
     // Сообщения об ошибках
     &-error-message {
         margin-top: 8px;
@@ -260,11 +237,6 @@
         align-items: center;
         gap: 6px;
         animation: slideDown 0.3s ease;
-        
-        &::before {
-            content: '⚠️';
-            font-size: 1rem;
-        }
     }
     
     // Счетчик символов
