@@ -1,12 +1,10 @@
-console.log('Booking form script loadedввввв');
 
-function onRecaptchaSuccess(token) {
-    console.log('reCAPTCHA verified with token:', token);
+// Глобальная функция для отправки формы из модального окна
+function submitBookingForm() {
+    handleModalFormSubmit(null);
 }
 
 function handleSuccess(response) {
-    console.log('Form submitted successfully:', response);
-    
     // Закрываем модальное окно
     closeConfirmationModal();
     
@@ -22,8 +20,6 @@ function handleSuccess(response) {
 }
 
 function handleError(response) {
-    console.error('Form submission failed:', response);
-    
     // Закрываем модальное окно
     closeConfirmationModal();
     
@@ -130,26 +126,66 @@ function showConfirmationModal() {
     const nameField = document.getElementById('patient_name');
     const emailField = document.getElementById('email');
     const phoneField = document.getElementById('phone');
+    const birthDateField = document.getElementById('birth_date');
+    const snsNumberField = document.getElementById('sns_number');
+    const nifField = document.getElementById('nif');
+    const healthInsuranceField = document.getElementById('health_insurance');
     const consultationField = document.getElementById('consultation_type_id');
     const dateField = document.getElementById('appointment_date');
     const timeField = document.getElementById('appointment_time');
-    const descriptionField = document.getElementById('description');
+    const consultationReasonField = document.getElementById('consultation_reason');
     
     if (nameField) document.getElementById('preview-name').textContent = nameField.value;
     if (emailField) document.getElementById('preview-email').textContent = emailField.value;
     if (phoneField) document.getElementById('preview-phone').textContent = phoneField.value;
+    if (birthDateField) {
+        const birthDatePreview = document.getElementById('preview-birth-date');
+        if (birthDatePreview) {
+            birthDatePreview.textContent = formatDate(birthDateField.value);
+        }
+    }
+    if (snsNumberField && snsNumberField.value) {
+        const snsPreview = document.getElementById('preview-sns-number');
+        if (snsPreview) {
+            snsPreview.textContent = snsNumberField.value;
+            document.getElementById('preview-sns-container').style.display = 'flex';
+        }
+    } else {
+        const snsContainer = document.getElementById('preview-sns-container');
+        if (snsContainer) snsContainer.style.display = 'none';
+    }
+    if (nifField && nifField.value) {
+        const nifPreview = document.getElementById('preview-nif');
+        if (nifPreview) {
+            nifPreview.textContent = nifField.value;
+            document.getElementById('preview-nif-container').style.display = 'flex';
+        }
+    } else {
+        const nifContainer = document.getElementById('preview-nif-container');
+        if (nifContainer) nifContainer.style.display = 'none';
+    }
+    if (healthInsuranceField && healthInsuranceField.value) {
+        const healthInsurancePreview = document.getElementById('preview-health-insurance');
+        if (healthInsurancePreview) {
+            healthInsurancePreview.textContent = healthInsuranceField.value;
+            document.getElementById('preview-health-insurance-container').style.display = 'flex';
+        }
+    } else {
+        const healthInsuranceContainer = document.getElementById('preview-health-insurance-container');
+        if (healthInsuranceContainer) healthInsuranceContainer.style.display = 'none';
+    }
     if (consultationField) document.getElementById('preview-consultation').textContent = getConsultationName(consultationField);
     if (dateField) document.getElementById('preview-date').textContent = formatDate(dateField.value);
     if (timeField) document.getElementById('preview-time').textContent = timeField.value;
     
-    // Показываем описание только если оно заполнено
-    const description = descriptionField ? descriptionField.value : '';
-    const descriptionContainer = document.getElementById('preview-description-container');
-    if (description.trim() && descriptionContainer) {
-        document.getElementById('preview-description').textContent = description;
-        descriptionContainer.style.display = 'flex';
-    } else if (descriptionContainer) {
-        descriptionContainer.style.display = 'none';
+    // Показываем motivo da consulta
+    const consultationReason = consultationReasonField ? consultationReasonField.value : '';
+    const consultationReasonContainer = document.getElementById('preview-consultation-reason-container');
+    if (consultationReason.trim() && consultationReasonContainer) {
+        document.getElementById('preview-consultation-reason').textContent = consultationReason;
+        consultationReasonContainer.style.display = 'flex';
+    } else if (consultationReasonContainer) {
+        consultationReasonContainer.style.display = 'none';
     }
     
     // Показываем модальное окно
@@ -160,7 +196,6 @@ function showConfirmationModal() {
         if (modal.parentNode !== document.body) {
             document.body.appendChild(modal);
         }
-        
         modal.style.display = 'block';
         modal.setAttribute('aria-hidden', 'false');
         // Блокируем прокрутку страницы
@@ -212,6 +247,66 @@ function closeConfirmationModal() {
     }
 }
 
+// Функция для обработки отправки формы из модального окна
+function handleModalFormSubmit(e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    // Получаем данные из основной формы
+    const mainForm = document.querySelector('form[data-request="onSaveBooking"]');
+    if (!mainForm) {
+        alert('Erro: Formulário principal não encontrado.');
+        return;
+    }
+
+    const dateField = document.getElementById('appointment_date');
+    const timeField = document.getElementById('appointment_time');
+    
+    if (!dateField || !timeField) {
+        alert('Erro: Campos de data ou hora não encontrados.');
+        return;
+    }
+
+    const date = dateField.value;
+    const time = timeField.value;
+    
+    if (!date || !time) {
+        alert('Por favor, selecione uma data e um horário.');
+        return;
+    }
+    
+    // Создаем скрытое поле для отправки объединенной даты и времени
+    let hiddenField = document.getElementById('combined_appointment_time');
+    if (!hiddenField) {
+        hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.id = 'combined_appointment_time';
+        hiddenField.name = 'appointment_time';
+        mainForm.appendChild(hiddenField);
+    }
+    
+    // Устанавливаем значение объединенной даты и времени
+    hiddenField.value = combineDateTime(date, time);
+    
+    // Отправляем AJAX запрос через основную форму
+    // Winter CMS framework автоматически соберет данные из формы
+    if (typeof $ !== 'undefined' && $.request) {
+        // Используем основную форму напрямую
+        $(mainForm).request('onSaveBooking', {
+            success: function(response) {
+                handleSuccess(response);
+            },
+            error: function(response) {
+                handleError(response);
+            }
+        });
+    } else {
+        alert('Erro: Framework AJAX não carregado.');
+    }
+}
+
 // Переместить модальное окно в body при загрузке страницы
 function moveModalToBody() {
     const modal = document.getElementById('confirmationModal');
@@ -229,70 +324,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('pjax:complete', function() {
         setTimeout(moveModalToBody, 100);
     });
-    // Обработчик отправки основной формы (для валидации)
-    const mainForm = document.querySelector('form[data-request="onSaveBooking"]:not(#modal-form)');
-    
-    // Обработчик отправки формы в модальном окне
-    const modalForm = document.getElementById('modal-form');
-    if (modalForm) {
-        modalForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Получаем данные из основной формы
-            const mainForm = document.querySelector('form[data-request="onSaveBooking"]:not(#modal-form)');
-            if (!mainForm) {
-                console.error('Main form not found');
-                return;
-            }
-
-            const dateField = document.getElementById('appointment_date');
-            const timeField = document.getElementById('appointment_time');
-            
-            if (!dateField || !timeField) {
-                console.error('Date or time field not found');
-                return;
-            }
-
-            const date = dateField.value;
-            const time = timeField.value;
-            
-            // Создаем скрытое поле для отправки объединенной даты и времени
-            let hiddenField = document.getElementById('combined_appointment_time');
-            if (!hiddenField) {
-                hiddenField = document.createElement('input');
-                hiddenField.type = 'hidden';
-                hiddenField.id = 'combined_appointment_time';
-                hiddenField.name = 'appointment_time';
-                mainForm.appendChild(hiddenField);
-            }
-            
-            // Устанавливаем значение объединенной даты и времени
-            hiddenField.value = combineDateTime(date, time);
-            
-            // Отладочная информация
-            console.log('Form data before submission:');
-            const formData = new FormData(mainForm);
-            for (let [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
-            }
-            
-            // Отправляем AJAX запрос через основную форму
-            // Winter CMS framework автоматически соберет данные из формы
-            if (typeof $ !== 'undefined' && $.request) {
-                // Используем основную форму напрямую
-                $(mainForm).request('onSaveBooking', {
-                    success: function(response) {
-                        handleSuccess(response);
-                    },
-                    error: function(response) {
-                        handleError(response);
-                    }
-                });
-            } else {
-                console.error('Winter CMS AJAX framework not loaded');
-            }
-        });
-    }
 
     // Закрытие модального окна при клике вне его
     window.onclick = function(event) {
@@ -309,13 +340,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Добавляем обработчики изменения полей для отладки
-    document.querySelectorAll('input, select, textarea').forEach(field => {
-        field.addEventListener('change', function(e) {
-            console.log(`Field ${this.name} changed to:`, this.value);
-        });
-    });
-     
     // Обработчик изменения типа консультации
     const consultationField = document.getElementById('consultation_type_id');
     if (consultationField) {
@@ -377,8 +401,6 @@ function updateConsultationFeatures(consultationTypeId) {
                 `;
             }
         });
-    } else {
-        console.error('Winter CMS AJAX framework not loaded');
     }
 }
 

@@ -56,6 +56,38 @@
                 required: 'Por favor, selecione um horário disponível.'
             }
         },
+        birth_date: {
+            required: true,
+            messages: {
+                required: 'Por favor, insira sua data de nascimento.'
+            }
+        },
+        consultation_reason: {
+            required: true,
+            maxLength: 1000,
+            messages: {
+                required: 'Por favor, descreva o motivo da consulta.',
+                maxLength: 'O motivo da consulta não pode ter mais de 1000 caracteres.'
+            }
+        },
+        sns_number: {
+            maxLength: 50,
+            messages: {
+                maxLength: 'O número de utente não pode ter mais de 50 caracteres.'
+            }
+        },
+        nif: {
+            maxLength: 20,
+            messages: {
+                maxLength: 'O NIF não pode ter mais de 20 caracteres.'
+            }
+        },
+        health_insurance: {
+            maxLength: 100,
+            messages: {
+                maxLength: 'O seguro de saúde não pode ter mais de 100 caracteres.'
+            }
+        },
         description: {
             maxLength: 1000,
             messages: {
@@ -255,15 +287,6 @@
         const errorIcon = fieldWrapper.querySelector('.field-error-icon');
         if (errorIcon) {
             errorIcon.remove();
-        }
-        
-        // Добавляем иконку успеха
-        if (!fieldWrapper.querySelector('.field-success-icon')) {
-            // const successIcon = document.createElement('span');
-            // successIcon.className = 'field-success-icon';
-            // successIcon.innerHTML = '✓';
-            // successIcon.setAttribute('aria-hidden', 'true');
-            // fieldWrapper.appendChild(successIcon);
         }
     }
     
