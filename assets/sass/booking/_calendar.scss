@@ -1,0 +1,294 @@
+@use "../colors";
+@use "sass:color";
+
+.calendar-group,
+.time-slots-group {
+    margin-bottom: 32px;
+    
+    label {
+        display: block;
+        font-weight: 600;
+        color: colors.$darkGray;
+        margin-bottom: 16px;
+        font-size: 1rem;
+    }
+}
+
+// Календарь
+.calendar-container {
+    background: colors.$white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 211, 243, 0.2);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid colors.$borderGray;
+    
+    .calendar-month-year {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: colors.$darkGray;
+        margin: 0;
+    }
+    
+    .calendar-nav-btn {
+        background: rgba(255, 211, 243, 0.2);
+        border: 2px solid rgba(255, 211, 243, 0.3);
+        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: colors.$darkGray;
+        
+        &:hover {
+            background: colors.$pink;
+            border-color: colors.$pink;
+            color: colors.$black;
+            transform: scale(1.05);
+        }
+        
+        &:active {
+            transform: scale(0.95);
+        }
+        
+        &:focus {
+            outline: 2px solid colors.$pink;
+            outline-offset: 2px;
+        }
+        
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+    
+    .calendar-weekday {
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: colors.$lightGray;
+        padding: 8px 4px;
+    }
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: colors.$white;
+    border: 2px solid transparent;
+    color: colors.$darkGray;
+    position: relative;
+    
+    &:hover:not(.past):not(.empty) {
+        background: rgba(255, 211, 243, 0.2);
+        border-color: colors.$pink;
+        transform: scale(1.05);
+    }
+    
+    &.today {
+        background: linear-gradient(135deg, colors.$pink 0%, color.adjust(colors.$pink, $lightness: 5%) 100%);
+        color: colors.$black;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(255, 211, 243, 0.4);
+    }
+    
+    &.selected {
+        background: linear-gradient(135deg, colors.$pink 0%, color.adjust(colors.$pink, $lightness: 3%) 100%);
+        color: colors.$black;
+        font-weight: 700;
+        border-color: colors.$pink;
+        box-shadow: 0 4px 12px rgba(255, 211, 243, 0.5);
+        transform: scale(1.1);
+    }
+    
+    &.past {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: colors.$lightBg;
+    }
+    
+    &.unavailable {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: colors.$lightBg;
+        position: relative;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: colors.$lightGray;
+            transform: translateY(-50%);
+        }
+        
+        &:hover {
+            transform: none;
+            background: colors.$lightBg;
+            border-color: transparent;
+        }
+    }
+    
+    &.empty {
+        visibility: hidden;
+    }
+    
+    &:focus {
+        outline: 2px solid colors.$pink;
+        outline-offset: 2px;
+    }
+}
+
+// Временные слоты
+.time-slots-container {
+    min-height: 200px;
+}
+
+.time-slots-loading,
+.time-slots-error,
+.time-slots-empty,
+.time-slots-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: colors.$lightGray;
+    font-size: 0.95rem;
+    
+    p {
+        margin: 8px 0;
+    }
+}
+
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.time-slot {
+    background: colors.$white;
+    border: 2px solid colors.$borderGray;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: colors.$darkGray;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 211, 243, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    &:hover {
+        border-color: colors.$pink;
+        background: rgba(255, 211, 243, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 211, 243, 0.3);
+        
+        &::before {
+            left: 100%;
+        }
+    }
+    
+    &.selected {
+        background: linear-gradient(135deg, colors.$pink 0%, color.adjust(colors.$pink, $lightness: 3%) 100%);
+        border-color: colors.$pink;
+        color: colors.$black;
+        box-shadow: 0 4px 15px rgba(255, 211, 243, 0.5);
+        transform: translateY(-2px) scale(1.05);
+    }
+    
+    &:active {
+        transform: translateY(0) scale(1);
+    }
+    
+    &:focus {
+        outline: 2px solid colors.$pink;
+        outline-offset: 2px;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .calendar-container {
+        padding: 16px;
+    }
+    
+    .calendar-header {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        
+        .calendar-month-year {
+            font-size: 1rem;
+        }
+        
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+        }
+    }
+    
+    .calendar-weekdays,
+    .calendar-days {
+        gap: 6px;
+    }
+    
+    .calendar-day {
+        font-size: 0.85rem;
+    }
+    
+    .time-slots-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 10px;
+    }
+    
+    .time-slot {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+}
+

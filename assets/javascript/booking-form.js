@@ -37,28 +37,29 @@ function handleError(response) {
 }
 
 function showMessage(message, type) {
-    // Удаляем существующие сообщения
-    const existingAlert = document.querySelector('.alert');
-    if (existingAlert) {
-        existingAlert.remove();
-    }
-    
-    // Создаем новое сообщение
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.textContent = message;
-    
-    // Вставляем сообщение в начало формы
-    const form = document.querySelector('form');
-    if (form) {
-        form.insertBefore(alert, form.firstChild);
+    // Используем toast-уведомления вместо простых alert
+    if (typeof showToast === 'function') {
+        showToast(message, type, 6000);
+    } else {
+        // Fallback на старый способ, если toast не загружен
+        const existingAlert = document.querySelector('.alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
         
-        // Автоматически скрываем через 5 секунд
-        setTimeout(() => {
-            if (alert.parentNode) {
-                alert.remove();
-            }
-        }, 5000);
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.textContent = message;
+        
+        const form = document.querySelector('form');
+        if (form) {
+            form.insertBefore(alert, form.firstChild);
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
     }
 }
 
@@ -88,13 +89,27 @@ function getConsultationName(selectElement) {
 
 // Показать модальное окно подтверждения
 function showConfirmationModal() {
-    // Проверяем валидность формы
+    // Используем улучшенную валидацию, если доступна
     const form = document.querySelector('form');
-    if (!form || !form.checkValidity()) {
-        if (form) {
-            form.reportValidity();
+    if (!form) return;
+    
+    // Проверяем валидность формы через нашу систему валидации
+    if (typeof validateBookingForm === 'function') {
+        if (!validateBookingForm(form)) {
+            // Прокручиваем к первому полю с ошибкой
+            const firstError = form.querySelector('.field-error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+            return;
         }
-        return;
+    } else {
+        // Fallback на стандартную валидацию
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
     }
     
     // Проверяем reCAPTCHA
@@ -102,6 +117,11 @@ function showConfirmationModal() {
         const recaptchaResponse = grecaptcha.getResponse();
         if (!recaptchaResponse) {
             showMessage('Por favor, confirme que você não é um robô.', 'error');
+            // Прокручиваем к reCAPTCHA
+            const recaptchaElement = document.querySelector('.g-recaptcha');
+            if (recaptchaElement) {
+                recaptchaElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
     }
@@ -135,9 +155,44 @@ function showConfirmationModal() {
     // Показываем модальное окно
     const modal = document.getElementById('confirmationModal');
     if (modal) {
+        // Перемещаем модальное окно в body, если оно еще не там
+        // Это гарантирует, что оно будет поверх всех элементов
+        if (modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+        }
+        
         modal.style.display = 'block';
+        modal.setAttribute('aria-hidden', 'false');
         // Блокируем прокрутку страницы
         document.body.style.overflow = 'hidden';
+        
+        // Фокус на кнопке закрытия для доступности
+        const closeBtn = modal.querySelector('.close');
+        if (closeBtn) {
+            setTimeout(() => closeBtn.focus(), 100);
+        }
+        
+        // Предотвращаем фокус на элементах за модальным окном
+        const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+        
+        // Обработка Tab для зацикливания фокуса внутри модального окна
+        modal.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
+                }
+            }
+        });
     }
 }
 
@@ -146,17 +201,49 @@ function closeConfirmationModal() {
     const modal = document.getElementById('confirmationModal');
     if (modal) {
         modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = 'auto';
+        
+        // Возвращаем фокус на кнопку подтверждения
+        const confirmBtn = document.getElementById('confirmBtn');
+        if (confirmBtn) {
+            setTimeout(() => confirmBtn.focus(), 100);
+        }
+    }
+}
+
+// Переместить модальное окно в body при загрузке страницы
+function moveModalToBody() {
+    const modal = document.getElementById('confirmationModal');
+    if (modal && modal.parentNode !== document.body) {
+        document.body.appendChild(modal);
     }
 }
 
 // Инициализация после загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
-    // Обработчик отправки формы
-    const form = document.querySelector('form[data-request="onSaveBooking"]');
-    if (form) {
-        form.addEventListener('submit', function(e) {
+    // Перемещаем модальное окно в body сразу при загрузке
+    moveModalToBody();
+    
+    // Также перемещаем после PJAX переходов
+    document.addEventListener('pjax:complete', function() {
+        setTimeout(moveModalToBody, 100);
+    });
+    // Обработчик отправки основной формы (для валидации)
+    const mainForm = document.querySelector('form[data-request="onSaveBooking"]:not(#modal-form)');
+    
+    // Обработчик отправки формы в модальном окне
+    const modalForm = document.getElementById('modal-form');
+    if (modalForm) {
+        modalForm.addEventListener('submit', function(e) {
             e.preventDefault();
+
+            // Получаем данные из основной формы
+            const mainForm = document.querySelector('form[data-request="onSaveBooking"]:not(#modal-form)');
+            if (!mainForm) {
+                console.error('Main form not found');
+                return;
+            }
 
             const dateField = document.getElementById('appointment_date');
             const timeField = document.getElementById('appointment_time');
@@ -176,28 +263,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 hiddenField.type = 'hidden';
                 hiddenField.id = 'combined_appointment_time';
                 hiddenField.name = 'appointment_time';
-                this.appendChild(hiddenField);
+                mainForm.appendChild(hiddenField);
             }
             
             // Устанавливаем значение объединенной даты и времени
             hiddenField.value = combineDateTime(date, time);
             
-            // Используем AJAX для отправки формы
-            const formData = new FormData(this);
-            
-            // Добавляем объединенную дату и время в formData
-            formData.set('appointment_time', hiddenField.value);
-            
             // Отладочная информация
             console.log('Form data before submission:');
+            const formData = new FormData(mainForm);
             for (let [key, value] of formData.entries()) {
                 console.log(`${key}: ${value}`);
             }
             
-            // Отправляем AJAX запрос
+            // Отправляем AJAX запрос через основную форму
+            // Winter CMS framework автоматически соберет данные из формы
             if (typeof $ !== 'undefined' && $.request) {
-                $.request('onSaveBooking', {
-                    data: formData,
+                // Используем основную форму напрямую
+                $(mainForm).request('onSaveBooking', {
                     success: function(response) {
                         handleSuccess(response);
                     },
