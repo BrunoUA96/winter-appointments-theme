@@ -509,10 +509,6 @@ textarea.form-control {
         display: flex;
         flex-direction: column;
         gap: 8px;
-
-        .feature-item span {
-            font-weight: 400;
-        }
     }
 
     &-item {
@@ -520,13 +516,6 @@ textarea.form-control {
         align-items: flex-start;
         gap: 14px;
         padding: 8px 0;
-    }
-
-    &-icon {
-        font-size: 1.6rem;
-        flex-shrink: 0;
-        margin-top: 2px;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
     }
 
     &-text {
@@ -543,31 +532,6 @@ textarea.form-control {
             color: colors.$darkGray;
             font-weight: 600;
         }
-    }
-}
-
-.feature {
-    &-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 0.9rem;
-        color: colors.$gray;
-        padding: 8px 0;
-        transition: all 0.2s ease;
-        
-        &:hover {
-            color: colors.$darkGray;
-            padding-left: 4px;
-        }
-    }
-
-    &-icon {
-        color: colors.$successGreen;
-        font-weight: bold;
-        font-size: 1.3rem;
-        flex-shrink: 0;
-        filter: drop-shadow(0 2px 4px rgba(40, 167, 69, 0.2));
     }
 }
 

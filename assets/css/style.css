@@ -1467,20 +1467,11 @@ textarea.form-control:focus {
   flex-direction: column;
   gap: 8px;
 }
-.info-content .feature-item span {
-  font-weight: 400;
-}
 .info-item {
   display: flex;
   align-items: flex-start;
   gap: 14px;
   padding: 8px 0;
-}
-.info-icon {
-  font-size: 1.6rem;
-  flex-shrink: 0;
-  margin-top: 2px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 .info-text {
   font-size: 0.95rem;
@@ -1494,27 +1485,6 @@ textarea.form-control:focus {
 .info-text strong {
   color: #2c3e50;
   font-weight: 600;
-}
-
-.feature-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.9rem;
-  color: #495057;
-  padding: 8px 0;
-  transition: all 0.2s ease;
-}
-.feature-item:hover {
-  color: #2c3e50;
-  padding-left: 4px;
-}
-.feature-icon {
-  color: #28a745;
-  font-weight: bold;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(40, 167, 69, 0.2));
 }
 
 .modal {
